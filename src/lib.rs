@@ -1,6 +1,5 @@
 pub(crate) mod format;
 
-use ansi_term::{Color, Style};
 use format::{Buffers, ColorLevel, Config, FmtEvent, SpanMode};
 use std::{
     fmt::{self, Write as _},
@@ -20,6 +19,7 @@ use tracing_subscriber::{
     layer::{Context, Layer},
     registry::{self, LookupSpan},
 };
+use yansi::{Color, Style};
 
 pub(crate) struct Data {
     start: Instant,
@@ -235,7 +235,7 @@ where
                 write!(
                     &mut current_buf,
                     "{}::",
-                    self.styled(Style::new().dimmed(), target,),
+                    self.styled(Style::default().dimmed(), target,),
                 )
                 .expect("Unable to write to buffer");
             }
@@ -243,14 +243,17 @@ where
             write!(
                 current_buf,
                 "{name}",
-                name = self.styled(Style::new().fg(Color::Green).bold(), span.metadata().name())
+                name = self.styled(
+                    Style::default().fg(Color::Green).bold(),
+                    span.metadata().name()
+                )
             )
             .unwrap();
             if self.config.bracketed_fields {
                 write!(
                     current_buf,
                     "{}",
-                    self.styled(Style::new().fg(Color::Green).bold(), "{") // Style::new().fg(Color::Green).dimmed().paint("{")
+                    self.styled(Style::default().fg(Color::Green).bold(), "{") // Style::new().fg(Color::Green).dimmed().paint("{")
                 )
                 .unwrap();
             } else {
@@ -262,7 +265,7 @@ where
                 write!(
                     current_buf,
                     "{}",
-                    self.styled(Style::new().fg(Color::Green).bold(), "}") // Style::new().dimmed().paint("}")
+                    self.styled(Style::default().fg(Color::Green).bold(), "}") // Style::new().dimmed().paint("}")
                 )
                 .unwrap();
             }
@@ -337,8 +340,8 @@ where
             write!(
                 &mut event_buf,
                 "{timestamp}{unit} ",
-                timestamp = self.styled(Style::new().dimmed(), elapsed.as_millis().to_string()),
-                unit = self.styled(Style::new().dimmed(), "ms"),
+                timestamp = self.styled(Style::default().dimmed(), elapsed.as_millis().to_string()),
+                unit = self.styled(Style::default().dimmed(), "ms"),
             )
             .expect("Unable to write to buffer");
         }
@@ -363,7 +366,7 @@ where
             write!(
                 &mut event_buf,
                 " {}",
-                self.styled(Style::new().dimmed(), target,),
+                self.styled(Style::default().dimmed(), target,),
             )
             .expect("Unable to write to buffer");
         }

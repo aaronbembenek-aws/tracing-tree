@@ -1,4 +1,3 @@
-use ansi_term::Color;
 use std::{
     fmt::{self, Write as _},
     io,
@@ -7,6 +6,7 @@ use tracing_core::{
     field::{Field, Visit},
     Level,
 };
+use yansi::Color;
 
 pub(crate) const LINE_VERT: &str = "│";
 const LINE_HORIZ: &str = "─";
@@ -248,11 +248,11 @@ pub struct ColorLevel<'a>(pub &'a Level);
 impl<'a> fmt::Display for ColorLevel<'a> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match *self.0 {
-            Level::TRACE => Color::Purple.bold().paint("TRACE"),
-            Level::DEBUG => Color::Blue.bold().paint("DEBUG"),
-            Level::INFO => Color::Green.bold().paint(" INFO"),
-            Level::WARN => Color::RGB(252, 234, 160).bold().paint(" WARN"), // orange
-            Level::ERROR => Color::Red.bold().paint("ERROR"),
+            Level::TRACE => Color::Magenta.style().bold().paint("TRACE"),
+            Level::DEBUG => Color::Blue.style().bold().paint("DEBUG"),
+            Level::INFO => Color::Green.style().bold().paint(" INFO"),
+            Level::WARN => Color::RGB(252, 234, 160).style().bold().paint(" WARN"), // orange
+            Level::ERROR => Color::Red.style().bold().paint("ERROR"),
         }
         .fmt(f)
     }
